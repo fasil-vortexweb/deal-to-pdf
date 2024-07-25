@@ -443,7 +443,7 @@ export function processDeal(deal, dealId) {
   modifyPdf(deal, dealId, TYPES.SOF);
   modifyPdf(deal, dealId, TYPES.APPLICATION);
   modifyPdf(deal, dealId, TYPES.HIRE);
-  modifyPdf(deal, dealId, TYPES.POYNT);
+  // modifyPdf(deal, dealId, TYPES.POYNT);
 }
 
 export async function modifyPdf(deal, dealId, type) {
