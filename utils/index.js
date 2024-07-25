@@ -5,7 +5,19 @@ export const TYPES = {
   DD: "DD",
   SOF: "SOF",
   APPLICATION: "APPLICATION",
+  HIRE: "HIRE",
+  POYNT: "POYNT",
 };
+
+/**
+ * Formats a given date into a string representation in the "en-GB" locale.
+ *
+ * @param {Date|string|number} date - The date to be formatted. It can be a Date object, a string representing a date, or a number representing a timestamp.
+ * @return {string} The formatted date string in the "en-GB" locale.
+ */
+function formatDate(date) {
+  return new Date(date).toLocaleDateString("en-GB");
+}
 
 /**
  * Retrieves the fields based on the type provided.
@@ -15,16 +27,27 @@ export const TYPES = {
  * @return {Object} The fields object for the specified type or an empty object if type is not found.
  */
 export async function getFields(deal, type) {
-  const contact = await fetchContactDetails(deal["CONTACT_ID"]);
+  const name = deal["UF_CRM_1721898555146"];
+  const phone = deal["UF_CRM_1721898775132"];
+  const email = deal["UF_CRM_1721898763992"];
+  const mobile = deal["UF_CRM_1721898789505"];
+  const city = deal["UF_CRM_1721898705193"];
+  const postalCode = deal["UF_CRM_1721898721086"];
+  const nationality = deal["UF_CRM_1721807834"];
 
-  const name = contact?.NAME + " " + contact?.LAST_NAME;
-  const phone = contact?.PHONE[0]?.VALUE || "";
-  const email = contact?.EMAIL[0]?.VALUE || "";
-  const dob = contact?.BIRTHDATE || "";
-  const address = contact?.ADDRESS || "";
-  const city = contact?.ADDRESS_CITY || "";
-  const postalCode = contact?.ADDRESS_POSTAL_CODE || "";
-  const country = contact?.ADDRESS_COUNTRY || "";
+  const dob = formatDate(deal["UF_CRM_1721807688"]);
+  const sofDeclarationDate = formatDate(deal["UF_CRM_66879DD535EAE"]);
+  const applicationDeclarationDate = formatDate(deal["UF_CRM_1721802784"]);
+  const applicationDateOfIncorporation = formatDate(deal["UF_CRM_1721802784"]);
+  const applicationDateOfCurrentOwnership = formatDate(
+    deal["UF_CRM_1721805406"]
+  );
+  const applicationExpiryDate = formatDate(deal["UF_CRM_1721807823"]);
+  const applicationIssueDate = formatDate(deal["UF_CRM_1721890417808"]);
+  const applicationDateOfIndustryExperience = formatDate(
+    deal["UF_CRM_1721899786303"]
+  );
+  const poyntDate = formatDate(deal["UF_CRM_1721926864215"]);
 
   const fields = {
     DD: {
@@ -37,7 +60,6 @@ export async function getFields(deal, type) {
       "Bank Number 5": deal["UF_CRM_6687D4F0C95F0"][5],
       "Bank Number 6": deal["UF_CRM_6687D4F0C95F0"][6],
       "Bank Number 7": deal["UF_CRM_6687D4F0C95F0"][7],
-
       "Bank Number 8": deal["UF_CRM_6687D4F0C95F0"][0],
       "Bank Number 9": deal["UF_CRM_6687D4F0D94ED"][1],
       "Bank Number 10": deal["UF_CRM_6687D4F0D94ED"][2],
@@ -51,9 +73,6 @@ export async function getFields(deal, type) {
       "Legal Name": deal["UF_CRM_66879DD09AF41"],
       "Legal Name 3": deal["UF_CRM_66879DD0A7044"],
       "Legal Name 4": deal["UF_CRM_66879DD0B671B"],
-
-      // TODO - GROUPS
-      //   'Group2': deal["UF_CRM_66879DD074993"],
 
       "MS rate 01": deal["UF_CRM_66879DD0D2B42"],
       "MS rate 22": deal["UF_CRM_66879DD0DF39C"],
@@ -133,86 +152,28 @@ export async function getFields(deal, type) {
       "Auth PP 6": deal["UF_CRM_66879DD3C0AFE"],
       "Auth PP 7": deal["UF_CRM_66879DD3CE614"],
 
-      // TODO - GROUPS
-      //   'Group1': deal["UF_CRM_66879DD074993"],
-
       Text2: deal["UF_CRM_66879DD3EC2F6"],
       Text3: deal["UF_CRM_66879DD4069C2"],
       Text5: deal["UF_CRM_66879DD415C0D"],
 
       "Misc 4": deal["UF_CRM_66879DD425BE7"][0],
       "Misc 6": String(deal["UF_CRM_66879DD4358EA"][0]) || "",
-      //    "Misc 7": deal["UF_CRM_66879DD074993"],
-      //    "Misc 8": deal["UF_CRM_66879DD074993"],
-      //    "Misc 9": deal["UF_CRM_66879DD074993"],
-      //    "Misc 10": deal["UF_CRM_66879DD074993"],
-
-      C104: deal["UF_CRM_66879DD074993"],
-      C105: deal["UF_CRM_66879DD074993"],
-      C106: deal["UF_CRM_66879DD074993"],
-      C107: deal["UF_CRM_66879DD074993"],
-      C108: deal["UF_CRM_66879DD074993"],
-      C109: deal["UF_CRM_66879DD074993"],
-
-      //    "C1010": deal["UF_CRM_66879DD074993"],
-      //    "C1011": deal["UF_CRM_66879DD074993"],
-      //    "C1012": deal["UF_CRM_66879DD074993"],
-      //    "C1013": deal["UF_CRM_66879DD074993"],
-      //    "C1014": deal["UF_CRM_66879DD074993"],
-      //    "C1015": deal["UF_CRM_66879DD074993"],
-      //    "C1016": deal["UF_CRM_66879DD074993"],
-      //    "C1017": deal["UF_CRM_66879DD074993"],
-      //    "C1018": deal["UF_CRM_66879DD074993"],
-      //    "C1019": deal["UF_CRM_66879DD074993"],
-      //    "C1020": deal["UF_CRM_66879DD074993"],
-      //    "C1021": deal["UF_CRM_66879DD074993"],
 
       "Exc Charges 9": deal["UF_CRM_66879DD506068"],
       "Exc Charges 10": deal["UF_CRM_66879DD5145BC"],
 
-      "Date 3": deal["UF_CRM_66879DD535EAE"],
+      "Date 3": sofDeclarationDate,
       "FL NAME": deal["UF_CRM_66879DD546E08"],
       "Occupation 3": deal["UF_CRM_66879DD55649B"],
     },
     APPLICATION: {
-      // TODO - C1010
-      // TODO - C1011
-      // TODO - C1012
-      // FUNDING: deal["UF_CRM_1721456148164"],
-      // "FUNDING 5": deal["UF_CRM_1721456148164"],
-      "FUNDING 14": "",
-      "FUNDING 13": "",
-      // "FUNDING 1": deal["UF_CRM_1721456148164"],
-      // "FUNDING 6": deal["UF_CRM_1721456148164"],
-      // "FUNDING 2": deal["UF_CRM_1721456148164"],
-      // "FUNDING 7": deal["UF_CRM_1721456148164"],
-      // "FUNDING 12": deal["UF_CRM_1721456148164"],
-      // "FUNDING 3": deal["UF_CRM_1721456148164"],
-      // "FUNDING 8": deal["UF_CRM_1721456148164"],
-      // "FUNDING 4": deal["UF_CRM_1721456148164"],
-      // "FUNDING 9": deal["UF_CRM_1721456148164"],
-      "Legal Name 176": "",
-      "Legal Name 177": "",
-      "Legal Name 178": "",
-      "Legal Name 179": "",
-      "Legal Name 180": "",
-      // TODO - C10110
-      // TODO - C101016
-      // TODO - C101017
-      // TODO - C101018
-      // TODO - C10115
-      // TODO - C10116
-      // TODO - C10118
-      // TODO - C10121
-      // TODO - C10119
-      // TODO - C10122
-      // TODO - C10120
-      // TODO - C10128
-      // TODO - C10129
-      // TODO - C10130
-      // TODO - C10131
-      // TODO - C10132
-      // TODO - C10133
+      "FUNDING 14": deal["UF_CRM_1721898817329"],
+      "FUNDING 13": deal["UF_CRM_1721898686091"],
+      "Legal Name 176": deal["UF_CRM_1721899462827"],
+      "Legal Name 177": deal["UF_CRM_1721899487425"],
+      "Legal Name 178": deal["UF_CRM_1721908583647"],
+      "Legal Name 179": deal["UF_CRM_1721899514699"],
+      "Legal Name 180": deal["UF_CRM_1721899530207"],
       "FUNDING 16": phone,
       "FUNDING 17": phone,
       "FUNDING 18": city,
@@ -224,265 +185,198 @@ export async function getFields(deal, type) {
       "FUNDING 26": postalCode,
       "FUNDING 29": postalCode,
       "FUNDING 32": phone,
-      // TODO - C10124
-      // TODO - C10125
-      // TOD) - C10135
-      // TOD) - C10126
-      // TOD) - C10136
-      // TOD) - C10127
-      // TOD) - C10137
-      "FUNDING 22": "",
-      "FUNDING 27": "",
-      // TODO - C10138
-      // TODO - C10143
-      // TODO - C10144
-      // TODO - C1064
-      // TODO - C1065
-      // TODO - C1066
-      // TODO - C1067
-      // TODO - C1068
-      // TODO - C1069
-      "FUNDING 39": "",
-      "FUNDING 68": "",
-      "FUNDING 78": "",
-      "FUNDING 51": deal["UF_CRM_1721802784"],
-      "FUNDING 53": deal["UF_CRM_1721805406"],
-      // TODO - C10139
-      // TODO - C10140
-      // TODO - C10141
-      // TODO - C10142
-      "Legal Name 210": "",
-      "Legal Name 211": "",
-      "Legal Name 212": "",
-      "FUNDING 45": "",
-      "FUNDING 52": "",
-      "FUNDING 54": "",
-      "FUNDING 59": "",
-      // TODO - C1046
-      // TODO - C1047
-      // TODO - C1048
-      // TODO - C1049
+      "FUNDING 22": deal["UF_CRM_1721898872287"],
+      "FUNDING 27": deal["UF_CRM_1721898909721"],
+      "FUNDING 39": deal["UF_CRM_1721899557936"],
+      "FUNDING 68": deal["UF_CRM_1721911006603"],
+      "FUNDING 78": deal["UF_CRM_1721910983409"],
+      "FUNDING 51": applicationDateOfIncorporation,
+      "FUNDING 53": applicationDateOfCurrentOwnership,
+      "Legal Name 210": deal["UF_CRM_1721900423327"],
+      "Legal Name 211": deal["UF_CRM_1721900478258"],
+      "Legal Name 212": deal["UF_CRM_1721900457026"],
+
+      "FUNDING 45": deal["UF_CRM_1721900256181"],
+      "FUNDING 52": deal["UF_CRM_1721900270115"],
+      "FUNDING 54": deal["UF_CRM_1721900289947"],
+      "FUNDING 59": deal["UF_CRM_1721900303429"],
+
       "FUNDING 44": deal["UF_CRM_1721806092"],
       "FUNDING 60": deal["UF_CRM_1721806107"],
       "FUNDING 61": deal["UF_CRM_1721806143"],
       "FUNDING 62": deal["UF_CRM_1721806201"],
       "FUNDING 63": deal["UF_CRM_1721806230"],
-      "FUNDING 71": deal["UF_CRM_1721806023"],
+      "FUNDING 71": deal["UF_CRM_1721900031554"],
       "FUNDING 72": deal["UF_CRM_1721806124"],
-      // TODO - C1039
-      // TODO - C1045
-      "Legal Name 150": "",
-      // TODO - C10145
-      // TODO - C10146
-      // TODO - C10147
-      // TODO - C10148
-      // TODO - C10165
-      // TODO - C10166
-      // TODO - C10167
-      "Legal Name 173": name,
-      "Legal Name 174": deal["UF_CRM_1721807688"],
-      "Legal Name 175": "",
-      // TODO - C1070
-      // TODO - C1071
-      "Legal Name 119": "",
-      "Legal Name 120": "",
+
+      "Legal Name 150": deal["UF_CRM_1721900328558"],
+
+      "Legal Name 173": deal["UF_CRM_1721911814507"],
+      "Legal Name 174": dob,
+      "Legal Name 175": deal["UF_CRM_1721807702"],
+
+      "Legal Name 119": deal["UF_CRM_1721904277527"],
+      "Legal Name 120": deal["UF_CRM_1721904287264"],
       "Legal Name 121": phone,
       "Legal Name 151": city,
-      "Legal Name 118": "",
+      "Legal Name 118": deal["UF_CRM_1721904246468"],
       "Legal Name 152": postalCode,
-      // TODO - C10161
-      // TODO - C10162
-      // TODO - C10163
-      // TODO - C10164
-      // TODO - C10177
-      // TODO - C10178
-      // TODO - C10179
-      "FUNDING 55": deal["UF_CRM_1721807834"],
-      "FUNDING 85": "",
-      "Legal Name 181": name,
-      "Legal Name 182": deal["UF_CRM_1721807688"],
-      "Legal Name 183": "",
-      // TODO - C1079
-      // TODO - C1082
-      "Legal Name 153": "",
-      "Legal Name 154": "",
-      "Legal Name 155": phone,
-      "Legal Name 156": email,
-      "Legal Name 157": phone,
-      "Legal Name 158": deal["UF_CRM_1721807790"],
-      "Legal Name 159": "",
-      "Legal Name 185": "",
-      "Legal Name 160": city,
-      "Legal Name 161": "",
-      "Legal Name 162": postalCode,
-      // TODO - C10168
-      // TODO - C10169
-      // TODO - C10170
-      // TODO - C10171
-      // TODO - C10180
-      // TODO - C10181
-      // TODO - C10182
-      "FUNDING 56": deal["UF_CRM_1721807834"],
-      "FUNDING 86": "",
-      "Legal Name 186": name,
-      "Legal Name 187": deal["UF_CRM_1721807688"],
-      "Legal Name 188": "",
-      // TODO - C1083
-      // TODO - C1084
-      "Legal Name 163": "",
-      "Legal Name 164": "",
-      "Legal Name 165": phone,
-      "Legal Name 166": email,
-      "Legal Name 167": phone,
-      "Legal Name 168": deal["UF_CRM_1721807790"],
-      "Legal Name 169": "",
-      "Legal Name 189": "",
-      "Legal Name 170": city,
+
+      "FUNDING 85": deal["UF_CRM_1721904312882"],
       "Legal Name 171": "",
-      "Legal Name 172": postalCode,
-      // TODO - C10172
-      // TODO - C10173
-      // TODO - C10174
-      // TODO - C10175
-      // TODO - C10184
-      // TODO - C10185
       "FUNDING 87": "",
-      "Legal Name 190": name,
-      "Legal Name 191": deal["UF_CRM_1721807688"],
       "Legal Name 192": "",
-      // TODO - C1085
-      // TODO - C1086
+
       "Legal Name 193": "",
       "Legal Name 194": "",
-      "Legal Name 195": phone,
-      "Legal Name 196": email,
-      "Legal Name 197": phone,
-      "Legal Name 198": deal["UF_CRM_1721807790"],
-      "Legal Name 199": "",
-      "Legal Name 200": "",
-      "Legal Name 201": city,
+
       "Legal Name 202": "",
-      "Legal Name 203": postalCode,
-      "Legal Name 1012": "",
-      "Legal Name 1013": "",
-      "Legal Name 1014": phone,
-      "Legal Name 1018": email,
-      "Legal Name 80": "",
-      "Legal Name 81": "",
-      "Legal Name 82": "",
-      "Legal Name 83": "",
-      "Legal Name 84": "",
-      "Legal Name 85": "",
-      "Legal Name 86": "",
-      "Legal Name 87": "",
-      "Legal Name 88": "",
-      "Legal Name 89": "",
-      "Legal Name 90": "",
-      "Legal Name 91": "",
-      "Legal Name 92": "",
-      "Legal Name 93": "",
-      "Legal Name 94": "",
-      "Legal Name 95": "",
-      "Legal Name 96": "",
+
+      "Legal Name 1012": deal["UF_CRM_1721909802272"],
+      "Legal Name 1013": deal["UF_CRM_1721909817941"],
+      "Legal Name 1014": deal["UF_CRM_1721914088584"],
+      "Legal Name 1018": deal["UF_CRM_1721909847862"],
+      "Legal Name 80": deal["UF_CRM_1721907567960"],
+      "Legal Name 81": deal["UF_CRM_1721808234"],
+
+      "Legal Name 82": deal["UF_CRM_1721907645150"],
+      "Legal Name 83": deal["UF_CRM_1721907657241"],
+      "Legal Name 84": deal["UF_CRM_1721907676288"],
+
+      "Legal Name 85": deal["UF_CRM_1721825349249"],
+
+      "Legal Name 86": deal["UF_CRM_1721907711498"],
+      "Legal Name 87": deal["UF_CRM_1721907722847"],
+      "Legal Name 88": deal["UF_CRM_1721907734779"],
+
+      "Legal Name 89": deal["UF_CRM_1721907777577"],
+      "Legal Name 90": deal["UF_CRM_1721907787562"],
+      "Legal Name 91": deal["UF_CRM_1721907798322"],
+
+      "Legal Name 92": deal["UF_CRM_1721907833246"],
+
+      "Legal Name 93": deal["UF_CRM_1721907963575"],
+      "Legal Name 94": deal["UF_CRM_1721908039041"],
+      "Legal Name 95": deal["UF_CRM_1721908081916"],
+      "Legal Name 96": deal["UF_CRM_1721908216553"],
       "Legal Name 97": deal["UF_CRM_1721822441"],
       "Legal Name 98": deal["UF_CRM_1721822475"],
       "Legal Name 99": deal["UF_CRM_1721822460"],
-      "Legal Name 100": "",
+      "Legal Name 100": deal["UF_CRM_1721905628569"],
       "Legal Name 101": deal["UF_CRM_1721822491"],
-      "Legal Name 1011": "",
-      // TODO - C113
-      // TODO - C114
-      // TODO - C115
-      // TODO - C126
-      // TODO - C127
-      // TODO - C128
-      // TODO - C129
-      // TODO - C132
-      // TODO - C130
-      // TODO - C133
-      // TODO - C131
-      // TODO - C134
-      // TODO - C135
-      // TODO - C10105
-      // TODO - C10106
-      // TODO - C10107
-      // TODO - C10108
-      // TODO - C101011
-      // TODO - C101012
-      // TODO - C101013
-      // TODO - C101014
-      // TODO - C101015
-      // TODO - C101026
-      // TODO - C101028
-      // TODO - C101032
-      // TODO - C101033
-      // TODO - C101029
-      // TODO - C101030
-      // TODO - C101031
-      // TODO - C101027
-      // TODO - C101039
-      // TODO - C101034
-      // TODO - C101035
-      // TODO - C101036
-      // TODO - C101037
-      "Legal Name 102": "",
-      "Legal Name 1015": "",
-      "Legal Name 1016": "",
-      "Legal Name 1017": "",
-      // TODO - C1080
-      // TODO - C1081
-      "Legal Name 109": deal["UF_CRM_66879DD546E08"],
-      "Legal Name 1019": deal["UF_CRM_66879DD546E08"],
-      "Legal Name 1010": deal["UF_CRM_1721802784"],
-      "Legal Name 1020": deal["UF_CRM_1721802784"],
-      // TOD - C95
-      // "FUNDING 47": deal["UF_CRM_1721456148164"],
-      // TODO - VAT NUMBER
-      "FUNDING 79": "",
-      // TODO - C1098
-      "FUNDING 82": "",
-      "FUNDING 83": "",
+      "Legal Name 1011": deal["UF_CRM_1721905691149"],
+
+      "Legal Name 102": deal["UF_CRM_1721907854145"],
+      "Legal Name 1015": deal["UF_CRM_1721897958423"],
+      "Legal Name 1016": deal["UF_CRM_1721897971273"],
+      "Legal Name 1017": deal["UF_CRM_1721897996676"],
+
+      "Legal Name 109": deal["UF_CRM_1721909629462"],
+      "Legal Name 1019": deal["UF_CRM_1721909629462"],
+      "Legal Name 1010": applicationDeclarationDate,
+      "Legal Name 1020": applicationDeclarationDate,
+
+      "FUNDING 79": deal["UF_CRM_1721899899716"],
+
+      "FUNDING 82": deal["UF_CRM_1721899947153"],
+      "FUNDING 83": deal["UF_CRM_1721899754502"],
       "FUNDING 80": deal["UF_CRM_1721805951"],
-      // TODO - VAT Number Pending
-      // TODO - In Business Confirmation
+
       "FUNDING 11": name,
-      // "Exclusion group/s": deal["UF_CRM_1721456148164"],
-      // TODO - C10123
-      // TODO - PCI 01
-      // TODO - PCI 02
+
       "FUNDING 24": name,
-      "Contact Name": name,
+      "Contact Name": deal["UF_CRM_1721899437643"],
       "FUNDING 25": email,
       "Email address": email,
       "FUNDING 33": phone,
       "Mobile No": phone,
       "Phone No": phone,
-      // TODO - C10134
-      // TODO - MS PCI
-      // TODO - MRS PCI
-      // TODO - MISS PCI
-      // TODO - MR PCI
-      // Text1: email,
-      "FUNDING 84": "",
+
+      "FUNDING 84": deal["UF_CRM_1721899978480"],
       "Legal Name 122": email,
-      "Legal Name 125": phone,
+      "Legal Name 125": mobile,
       "Legal Name 123": deal["UF_CRM_1721807790"],
-      "Legal Name 124": "",
-      "Legal Name 184": "",
-      "FUNDING 46": deal["UF_CRM_1721807834"],
-      "FUNDING 74": "",
-      // TODO - C10183
-      "FUNDING 57": deal["UF_CRM_1721807834"],
-      // TODO - C1078
-      // TODO - Govern Owned Entity
-      "FUNDING 81": "",
-      // TODO - C1097
-      "income tax field": "",
-      // TODO - income tax number
-      // TODO - corporate tax number
-      // TODO - charity number
-      "x corp Tax Number": "",
-      "x charity number": "",
+      "Legal Name 124": applicationIssueDate,
+      "Legal Name 184": applicationExpiryDate,
+      "FUNDING 46": nationality,
+      "FUNDING 74": deal["UF_CRM_1721904312882"],
+
+      "FUNDING 81": applicationDateOfIndustryExperience,
+
+      "income tax field": deal["UF_CRM_1721899822832"],
+
+      "x corp Tax Number": deal["UF_CRM_1721899840789"],
+      "x charity number": deal["UF_CRM_1721899850086"],
+    },
+    HIRE: {
+      // Hirer Information 1
+      "Legal Name 2": deal["UF_CRM_1721924693014"],
+      "Postal address 2": deal["UF_CRM_1721924722247"],
+      "Legal Name 83": deal["UF_CRM_1721924709010"],
+      "City 2": deal["UF_CRM_1721924730767"],
+      "Postcode 2": deal["UF_CRM_1721924739610"],
+      "Email 2": deal["UF_CRM_1721924748470"],
+      // Key Financial Information
+      "Legal Name 55": deal["UF_CRM_1721924870001"][0] || "",
+      "Legal Name 59": deal["UF_CRM_1721924971996"][0] || "",
+      "Legal Name 63": deal["UF_CRM_1721925004229"][0] || "",
+      "Legal Name 67": deal["UF_CRM_1721925027823"][0] || "",
+      "Legal Name 71": deal["UF_CRM_1721925050044"][0] || "",
+
+      "Legal Name 56": deal["UF_CRM_1721924870001"][1] || "",
+      "Legal Name 60": deal["UF_CRM_1721924971996"][1] || "",
+      "Legal Name 64": deal["UF_CRM_1721925004229"][1] || "",
+      "Legal Name 68": deal["UF_CRM_1721925027823"][1] || "",
+      "Legal Name 72": deal["UF_CRM_1721925050044"][1] || "",
+
+      "Legal Name 57": deal["UF_CRM_1721924870001"][2] || "",
+      "Legal Name 61": deal["UF_CRM_1721924971996"][2] || "",
+      "Legal Name 65": deal["UF_CRM_1721925004229"][2] || "",
+      "Legal Name 69": deal["UF_CRM_1721925027823"][2] || "",
+      "Legal Name 73": deal["UF_CRM_1721925050044"][2] || "",
+
+      "Legal Name 58": deal["UF_CRM_1721924870001"][3] || "",
+      "Legal Name 62": deal["UF_CRM_1721924971996"][3] || "",
+      "Legal Name 66": deal["UF_CRM_1721925004229"][3] || "",
+      "Legal Name 70": deal["UF_CRM_1721925027823"][3] || "",
+      "Legal Name 74": deal["UF_CRM_1721925050044"][3] || "",
+
+      "Legal Name 75": deal["UF_CRM_1721924870001"][4] || "",
+      "Legal Name 76": deal["UF_CRM_1721924971996"][4] || "",
+      "Legal Name 77": deal["UF_CRM_1721925004229"][4] || "",
+      "Legal Name 78": deal["UF_CRM_1721925027823"][4] || "",
+      "Legal Name 79": deal["UF_CRM_1721925050044"][4] || "",
+
+      "Legal Name 82": deal["UF_CRM_1721925118423"],
+      "Legal Name 81": deal["UF_CRM_1721925137066"],
+    },
+    POYNT: {
+      // Customer Information
+      Text_13: deal["UF_CRM_1721926292991"],
+      Text_14: deal["UF_CRM_1721926307981"],
+      Text_15: deal["UF_CRM_1721926317409"],
+      Text_16: deal["UF_CRM_1721926351184"],
+      Text_17: deal["UF_CRM_1721926372009"],
+      Text_19: deal["UF_CRM_1721926405302"],
+      Text_18: deal["UF_CRM_1721926418264"],
+      // Deatils
+      Text_20: deal["UF_CRM_1721926448436"],
+      Text2: deal["UF_CRM_1721926468296"],
+      Text_21: deal["UF_CRM_1721927109211"],
+
+      Text_22: deal["UF_CRM_1721926500614"],
+      Text3: deal["UF_CRM_1721926573877"],
+      Text_23: deal["UF_CRM_1721926606922"],
+
+      Text_24: deal["UF_CRM_1721926623333"],
+      Text4: deal["UF_CRM_1721926636587"],
+      // Customer declaration and signatures
+      Text_26: deal["UF_CRM_1721926292991"],
+      Text_27: poyntDate,
+
+      Text_29: deal["UF_CRM_1721926292991"],
+      // "Text_30": deal[""],
+      Text_31: poyntDate,
     },
   };
 
@@ -545,12 +439,11 @@ export async function fetchContactDetails(contactId) {
  * @return {void}
  */
 export function processDeal(deal, dealId) {
-  // if (deal?.UF_CRM_6687D4F0C95F0 && deal?.UF_CRM_6687D4F0C95F0 != "")
   modifyPdf(deal, dealId, TYPES.DD);
-  // if (deal?.UF_CRM_66879DD074993 && deal?.UF_CRM_66879DD074993 != "")
   modifyPdf(deal, dealId, TYPES.SOF);
-  // if (deal?.UF_CRM_1721822765 && deal?.UF_CRM_1721822765 != "")
   modifyPdf(deal, dealId, TYPES.APPLICATION);
+  modifyPdf(deal, dealId, TYPES.HIRE);
+  modifyPdf(deal, dealId, TYPES.POYNT);
 }
 
 export async function modifyPdf(deal, dealId, type) {
@@ -563,22 +456,215 @@ export async function modifyPdf(deal, dealId, type) {
 
   const form = pdfDoc.getForm();
 
-  // const positions = getFieldPositions(type);
   const fields = await getFields(deal, type);
 
   Object.keys(fields).forEach((key) => {
     const value = fields[key];
-
-    if (type === TYPES.SOF && key.includes("C1")) {
-      const checkBox = form.getCheckBox(key);
-      checkBox.check();
-      return;
-    }
-
     const field = form.getField(key);
+
     if (!field) return;
+
     field.setText(value);
   });
+
+  if (type === TYPES.SOF) {
+    const radioGroup2 = form.getRadioGroup("Group2");
+    const radioGroup1 = form.getRadioGroup("Group1");
+
+    // Selection of Merchant Service Charges Pricing Method
+    const pricingMethod = deal["UF_CRM_66879DD0C2EB5"];
+    if (pricingMethod) {
+      const selection =
+        pricingMethod === "91"
+          ? "Choice1"
+          : pricingMethod === "93"
+          ? "0"
+          : null;
+      if (selection) radioGroup2.select(selection);
+    }
+
+    // Secured by Elavon
+    const elavonSecurity = deal["UF_CRM_66879DD3DC198"];
+    if (elavonSecurity) {
+      const selection =
+        elavonSecurity === "95"
+          ? "Choice1"
+          : elavonSecurity === "97"
+          ? "Choice2"
+          : null;
+      if (selection) radioGroup1.select(selection);
+    }
+
+    // Other Charges
+    const checkboxes = [
+      "UF_CRM_66879DD496053",
+      "UF_CRM_66879DD4A6C70",
+      "UF_CRM_66879DD4B92A5",
+      "UF_CRM_66879DD4CC36C",
+      "UF_CRM_66879DD4DA414",
+      "UF_CRM_66879DD4E9200",
+    ];
+
+    checkboxes.forEach((field, index) => {
+      if (deal[field] === "1") {
+        const checkBox = form.getCheckBox(`C10${4 + index}`);
+        checkBox.check();
+      }
+    });
+  }
+
+  if (type === TYPES.APPLICATION) {
+    const checkboxes = ["C129", "C130", "C131", "C132", "C133", "C134", "C135"];
+    const multiSelectFields = [
+      {
+        field: "UF_CRM_1721908324310",
+        checks: {
+          375: "C101028",
+          377: "C101029",
+          379: "C101030",
+          381: "C101031",
+        },
+      },
+      {
+        field: "UF_CRM_1721918348646",
+        checks: {
+          457: "C10165",
+          459: "C10166",
+          461: "C10167",
+        },
+      },
+      {
+        field: "UF_CRM_1721911208261",
+        checks: {
+          415: "C10118",
+          417: "C10119",
+          419: "C10120",
+          421: "C10121",
+          423: "C10122",
+          425: "C10123",
+          427: "PCI 01",
+        },
+      },
+      {
+        field: "UF_CRM_1721911345383",
+        checks: {
+          429: "C10128",
+          431: "C10130",
+          433: "C10132",
+          435: "C10129",
+          437: "C10131",
+          439: "C10133",
+          441: "PCI 02",
+        },
+      },
+    ];
+
+    checkboxes.forEach((field) => {
+      if (field !== "C131") {
+        form.getCheckBox(field).check();
+      }
+    });
+
+    const singleChecks = [
+      {
+        field: "UF_CRM_1721899614199",
+        value: "1",
+        checkbox: "Govern Owned Entity",
+      },
+      { field: "UF_CRM_1721909867933", value: "1", checkbox: "C101015" },
+      { field: "UF_CRM_1721908070298", value: "1", checkbox: "C101026" },
+      { field: "UF_CRM_1721909673033", value: "1", checkbox: "C95" },
+      {
+        field: "UF_CRM_1721908160103",
+        values: { 367: "C101027", 369: "C101039" },
+      },
+      {
+        field: "UF_CRM_1721908256935",
+        values: { 371: "C101032", 373: "C101033" },
+      },
+      { field: "UF_CRM_1721907540587", value: "1", checkbox: "C10107" },
+      { field: "UF_CRM_1721907583706", values: { 1: "C101011", 0: "C101012" } },
+      { field: "UF_CRM_1721905318512", values: { 1: "C1080", 0: "C1081" } },
+      {
+        field: "UF_CRM_1721907506452",
+        values: { 349: "C10105", 351: "C10106" },
+      },
+      { field: "UF_CRM_1721911864260", values: { 0: "C1071", 1: "C1070" } },
+      { field: "UF_CRM_1721917842920", values: { 0: "C101014", 1: "C101013" } },
+      {
+        field: "UF_CRM_1721918248141",
+        values: { 449: "C10145", 451: "C10146", 453: "C10147", 455: "C10148" },
+      },
+      { field: "UF_CRM_1721900370652", values: { 0: "C10140", 1: "C10139" } },
+      { field: "UF_CRM_1721900178038", values: { 0: "C1045", 1: "C1039" } },
+      { field: "UF_CRM_1721900392951", values: { 0: "C10142", 1: "C10141" } },
+      {
+        field: "UF_CRM_1721910783095",
+        values: { 393: "C1046", 395: "C1047", 397: "C1048", 399: "C1049" },
+      },
+      {
+        field: "UF_CRM_1721910947278",
+        values: {
+          401: "C1064",
+          403: "C1069",
+          405: "C1067",
+          407: "C1066",
+          409: "C1078",
+          411: "C1065",
+          413: "C1068",
+        },
+      },
+      {
+        field: "UF_CRM_1721908556343",
+        values: {
+          383: "C10110",
+          385: "C10116",
+          387: "C10117",
+          389: "C10138",
+          391: "C101018",
+        },
+      },
+      {
+        field: "UF_CRM_1721899822832",
+        condition: true,
+        checkbox: "income tax number",
+      },
+      {
+        field: "UF_CRM_1721899840789",
+        condition: true,
+        checkbox: "corporate tax number",
+      },
+      {
+        field: "UF_CRM_1721899850086",
+        condition: true,
+        checkbox: "charity number",
+      },
+    ];
+
+    singleChecks.forEach(({ field, value, checkbox, values, condition }) => {
+      if (value !== undefined && deal[field] === value) {
+        form.getCheckBox(checkbox).check();
+      } else if (values) {
+        const checkBoxValue = values[deal[field]];
+        if (checkBoxValue) {
+          form.getCheckBox(checkBoxValue).check();
+        }
+      } else if (condition && deal[field] !== "") {
+        form.getCheckBox(checkbox).check();
+      }
+    });
+
+    multiSelectFields.forEach(({ field, checks }) => {
+      if (deal[field] && deal[field].length) {
+        deal[field].forEach((item) => {
+          const checkBoxValue = checks[item];
+          if (checkBoxValue) {
+            form.getCheckBox(checkBoxValue).check();
+          }
+        });
+      }
+    });
+  }
 
   const pdfBytes = await pdfDoc.save();
   fs.writeFileSync(outputFilePath, pdfBytes);
