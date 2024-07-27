@@ -1,5 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 import fs from "fs";
+import axios from "axios";
 
 export const TYPES = {
   DD: "DD",
@@ -8,6 +9,8 @@ export const TYPES = {
   HIRE: "HIRE",
   POYNT: "POYNT",
 };
+
+const WEBHOOK_URL = "https://5tel.bitrix24.uk/rest/13/06ya9ccs2qvobl6t/";
 
 /**
  * Formats a given date into a string representation in the "en-GB" locale.
@@ -352,31 +355,31 @@ export async function getFields(deal, type) {
     },
     POYNT: {
       // Customer Information
-      Text_13: deal["UF_CRM_1721926292991"],
-      Text_14: deal["UF_CRM_1721926307981"],
-      Text_15: deal["UF_CRM_1721926317409"],
-      Text_16: deal["UF_CRM_1721926351184"],
-      Text_17: deal["UF_CRM_1721926372009"],
-      Text_19: deal["UF_CRM_1721926405302"],
-      Text_18: deal["UF_CRM_1721926418264"],
+      "Text_13 ": deal["UF_CRM_1721926292991"],
+      "Text_14 ": deal["UF_CRM_1721926307981"],
+      "Text_15 ": deal["UF_CRM_1721926317409"],
+      "Text_16 ": deal["UF_CRM_1721926351184"],
+      "Text_17 ": deal["UF_CRM_1721926372009"],
+      "Text_19 ": deal["UF_CRM_1721926405302"],
+      "Text_18 ": deal["UF_CRM_1721926418264"],
       // Deatils
-      Text_20: deal["UF_CRM_1721926448436"],
+      "Text_20 ": deal["UF_CRM_1721926448436"],
       Text2: deal["UF_CRM_1721926468296"],
-      Text_21: deal["UF_CRM_1721927109211"],
+      "Text_21 ": deal["UF_CRM_1721927109211"],
 
-      Text_22: deal["UF_CRM_1721926500614"],
+      "Text_22 ": deal["UF_CRM_1721926500614"],
       Text3: deal["UF_CRM_1721926573877"],
-      Text_23: deal["UF_CRM_1721926606922"],
+      "Text_23 ": deal["UF_CRM_1721926606922"],
 
-      Text_24: deal["UF_CRM_1721926623333"],
+      "Text_24 ": deal["UF_CRM_1721926623333"],
       Text4: deal["UF_CRM_1721926636587"],
       // Customer declaration and signatures
-      Text_26: deal["UF_CRM_1721926292991"],
-      Text_27: poyntDate,
+      "Text_26 ": deal["UF_CRM_1721926292991"],
+      "Text_27 ": poyntDate,
 
-      Text_29: deal["UF_CRM_1721926292991"],
+      "Text_29 ": deal["UF_CRM_1721926292991"],
       // "Text_30": deal[""],
-      Text_31: poyntDate,
+      "Text_31 ": poyntDate,
     },
   };
 
@@ -401,7 +404,7 @@ export function isValidDealEvent(data) {
  */
 export async function fetchDealDetails(dealId) {
   const response = await fetch(
-    `https://5tel.bitrix24.uk/rest/13/buxgulfut3835t54/crm.deal.get.json?ID=${dealId}`
+    `https://5tel.bitrix24.uk/rest/13/06ya9ccs2qvobl6t/crm.deal.get.json?ID=${dealId}`
   );
 
   const result = await response.json();
@@ -420,7 +423,7 @@ export async function fetchDealDetails(dealId) {
  */
 export async function fetchContactDetails(contactId) {
   const response = await fetch(
-    `https://5tel.bitrix24.uk/rest/13/buxgulfut3835t54/crm.contact.get.json?ID=${contactId}`
+    `https://5tel.bitrix24.uk/rest/13/06ya9ccs2qvobl6t/crm.contact.get.json?ID=${contactId}`
   );
 
   const result = await response.json();
@@ -438,19 +441,51 @@ export async function fetchContactDetails(contactId) {
  * @param {number} dealId - The ID of the deal.
  * @return {void}
  */
-export function processDeal(deal, dealId) {
-  modifyPdf(deal, dealId, TYPES.DD);
-  modifyPdf(deal, dealId, TYPES.SOF);
-  modifyPdf(deal, dealId, TYPES.APPLICATION);
-  modifyPdf(deal, dealId, TYPES.HIRE);
-  // modifyPdf(deal, dealId, TYPES.POYNT);
+export async function processDeal(deal, dealId) {
+  const name = deal["UF_CRM_1721898555146"] || "";
+  const phone = deal["UF_CRM_1721898775132"] || "";
+  const email = deal["UF_CRM_1721898763992"] || "";
+
+  const contactRes = await axios.get(`${WEBHOOK_URL}crm.contact.add`, {
+    params: {
+      fields: {
+        NAME: name,
+        EMAIL: [
+          {
+            VALUE: email,
+          },
+        ],
+        PHONE: [
+          {
+            VALUE: phone,
+          },
+        ],
+      },
+    },
+  });
+
+  const contactId = contactRes?.data?.result;
+
+  modifyPdf(deal, dealId, TYPES.DD, contactId);
+  modifyPdf(deal, dealId, TYPES.SOF, contactId);
+  modifyPdf(deal, dealId, TYPES.APPLICATION, contactId);
+  modifyPdf(deal, dealId, TYPES.HIRE, contactId);
+  modifyPdf(deal, dealId, TYPES.POYNT, contactId);
 }
 
-export async function modifyPdf(deal, dealId, type) {
+/**
+ * Modifies a PDF template with deal details and saves it as a new PDF file.
+ *
+ * @param {Object} deal - The deal object containing details to be filled in the PDF.
+ * @param {number} dealId - The ID of the deal.
+ * @param {string} type - The type of the PDF template.
+ * @param {number} contactId - The ID of the contact associated with the deal.
+ * @return {Promise<void>} A promise that resolves when the PDF is saved and uploaded.
+ */
+export async function modifyPdf(deal, dealId, type, contactId) {
   const templateFilePath = `./templates/${type}.pdf`;
   const outputFilePath = `./output/${type}_${dealId}.pdf`;
 
-  // Load the template PDF
   const templateFile = fs.readFileSync(templateFilePath);
   const pdfDoc = await PDFDocument.load(templateFile);
 
@@ -668,4 +703,87 @@ export async function modifyPdf(deal, dealId, type) {
 
   const pdfBytes = await pdfDoc.save();
   fs.writeFileSync(outputFilePath, pdfBytes);
+
+  await uploadPDFToBitrix(outputFilePath);
+  await createNewESign(outputFilePath, contactId);
+}
+
+/**
+ * Asynchronously reads a file from the specified path and encodes it to base64.
+ *
+ * @param {string} filePath - The path to the file to be encoded.
+ * @return {Promise<string>} A promise that resolves to the base64 encoded data of the file.
+ *                           If an error occurs during the reading or encoding process, the promise is rejected with an error.
+ */
+function encodeFileToBase64(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, { encoding: "base64" }, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+}
+
+/**
+ * Asynchronously uploads a PDF file to Bitrix24 CRM's Company Drive.
+ *
+ * @param {string} filePath - The path to the PDF file to be uploaded.
+ * @return {Promise<Object>} A promise that resolves to an object indicating the success or failure of the operation.
+ *   If successful, the object will have a `success` property set to `true`.
+ *   If unsuccessful, the object will have a `success` property set to `false` and a `message` property containing the error message.
+ */
+async function uploadPDFToBitrix(filePath) {
+  try {
+    const base64File = await encodeFileToBase64(filePath);
+    const fileName = filePath.split("/").pop();
+
+    const response = await axios.post(
+      `${WEBHOOK_URL}disk.folder.uploadfile`,
+      {
+        id: "1477", // Folder ID of Elavon Forms inside Company Drive
+        data: {
+          NAME: fileName,
+        },
+        fileContent: [fileName, base64File],
+        generateUniqueName: true,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const fileId = response.data.result.FILE_ID;
+    if (!fileId) {
+      throw new Error("File upload failed");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
+ * Asynchronously creates a new electronic signature (ESign) in Bitrix24 CRM.
+ *
+ * @param {string} filePath - The path to the file to be uploaded and used as the title of the ESign.
+ * @param {number} contactId - The ID of the contact associated with the ESign.
+ * @return {Promise<Object>} A promise that resolves to an object indicating the success or failure of the operation.
+ *   If successful, the object will have a `success` property set to `true`.
+ *   If unsuccessful, the object will have a `success` property set to `false` and a `message` property containing the error message.
+ */
+async function createNewESign(filePath, contactId) {
+  const fileName = filePath.split("/").pop();
+
+  try {
+    const response = await axios.post(`${WEBHOOK_URL}crm.item.add`, {
+      entityTypeId: "36",
+      fields: {
+        TITLE: fileName,
+        CONTACT_IDS: [contactId],
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
