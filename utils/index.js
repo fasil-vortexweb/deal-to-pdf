@@ -10,26 +10,30 @@ export const TYPES = {
   POYNT: "POYNT",
 };
 
-const WEBHOOK_URL = "https://5tel.bitrix24.uk/rest/13/06ya9ccs2qvobl6t/";
+const WEBHOOK_URL = "https://5tel.bitrix24.uk/rest/13/a97xzmh2gcam6bf8/";
 
-/**
- * Formats a given date into a string representation in the "en-GB" locale.
- *
- * @param {Date|string|number} date - The date to be formatted. It can be a Date object, a string representing a date, or a number representing a timestamp.
- * @return {string} The formatted date string in the "en-GB" locale.
- */
 function formatDate(date) {
   return new Date(date).toLocaleDateString("en-GB");
 }
 
-/**
- * Retrieves the fields based on the type provided.
- *
- * @param {Object} deal - The deal object containing the fields.
- * @param {string} type - The type of fields to retrieve.
- * @return {Object} The fields object for the specified type or an empty object if type is not found.
- */
 export async function getFields(deal, type) {
+  const LEGAL_NAME = deal["UF_CRM_1721456148164"];
+  const FULL_NAME = deal["UF_CRM_66879DD546E08"];
+  const EMAIL = deal["UF_CRM_1721898763992"];
+  const PHONE = deal["UF_CRM_1721898775132"];
+  const MOBILE = deal["UF_CRM_1721898789505"];
+  const POST_CODE = deal["UF_CRM_6687D4F10F1F1"];
+  const STATE = deal["UF_CRM_1721904277527"];
+  const COUNTRY = deal["UF_CRM_1721904287264"];
+  const CITY = deal["UF_CRM_1721898705193"];
+  const DATE = formatDate(deal["UF_CRM_6687D4F12CFCF"]);
+  const MID_NUMBER = deal["UF_CRM_1721924709010"];
+  const OCCUPATION = deal["UF_CRM_66879DD55649B"];
+  const DBA_NAME = deal["UF_CRM_1721898817329"];
+  const VAT_NUMBER = deal["UF_CRM_1721805951"];
+  const DOB = formatDate(deal["UF_CRM_1721807688"]);
+  const ADDRESS = deal["UF_CRM_1721924722247"];
+
   const name = deal["UF_CRM_1721898555146"];
   const phone = deal["UF_CRM_1721898775132"];
   const email = deal["UF_CRM_1721898763992"];
@@ -39,8 +43,11 @@ export async function getFields(deal, type) {
   const nationality = deal["UF_CRM_1721807834"];
 
   const dob = formatDate(deal["UF_CRM_1721807688"]);
+  const declarationDate = formatDate(deal["UF_CRM_66879DD535EAE"]);
+
   const sofDeclarationDate = formatDate(deal["UF_CRM_66879DD535EAE"]);
   const applicationDeclarationDate = formatDate(deal["UF_CRM_1721802784"]);
+
   const applicationDateOfIncorporation = formatDate(deal["UF_CRM_1721802784"]);
   const applicationDateOfCurrentOwnership = formatDate(
     deal["UF_CRM_1721805406"]
@@ -54,7 +61,8 @@ export async function getFields(deal, type) {
 
   const fields = {
     DD: {
-      "Legal Name 3": deal["UF_CRM_66879DD074993"],
+      "Legal Name 3": LEGAL_NAME, // Legal Name
+      // Bank account number
       "Bank Number": deal["UF_CRM_6687D4F0C95F0"][0],
       "Bank Number 1": deal["UF_CRM_6687D4F0C95F0"][1],
       "Bank Number 2": deal["UF_CRM_6687D4F0C95F0"][2],
@@ -63,19 +71,21 @@ export async function getFields(deal, type) {
       "Bank Number 5": deal["UF_CRM_6687D4F0C95F0"][5],
       "Bank Number 6": deal["UF_CRM_6687D4F0C95F0"][6],
       "Bank Number 7": deal["UF_CRM_6687D4F0C95F0"][7],
+      // sort code
       "Bank Number 8": deal["UF_CRM_6687D4F0C95F0"][0],
       "Bank Number 9": deal["UF_CRM_6687D4F0D94ED"][1],
       "Bank Number 10": deal["UF_CRM_6687D4F0D94ED"][2],
       "Bank Number 11": deal["UF_CRM_6687D4F0D94ED"][3],
       "Bank Number 12": deal["UF_CRM_6687D4F0D94ED"][4],
       "Bank Number 13": deal["UF_CRM_6687D4F0D94ED"][5],
+      "Legal Name 11": DATE,
     },
     SOF: {
-      "Legal Name 1": deal["UF_CRM_66879DD074993"],
-      "Legal Name 2": deal["UF_CRM_6687D4F0C95F0"],
-      "Legal Name": deal["UF_CRM_66879DD09AF41"],
-      "Legal Name 3": deal["UF_CRM_66879DD0A7044"],
-      "Legal Name 4": deal["UF_CRM_66879DD0B671B"],
+      "Legal Name 1": LEGAL_NAME, // Legal Name
+      "Legal Name 2": MID_NUMBER, // MID Number
+      "Legal Name": deal["UF_CRM_66879DD09AF41"], // currency code
+      "Legal Name 3": deal["UF_CRM_66879DD0A7044"], // parent chain number
+      "Legal Name 4": deal["UF_CRM_66879DD0B671B"], // american express number
 
       "MS rate 01": deal["UF_CRM_66879DD0D2B42"],
       "MS rate 22": deal["UF_CRM_66879DD0DF39C"],
@@ -165,9 +175,9 @@ export async function getFields(deal, type) {
       "Exc Charges 9": deal["UF_CRM_66879DD506068"],
       "Exc Charges 10": deal["UF_CRM_66879DD5145BC"],
 
-      "Date 3": sofDeclarationDate,
-      "FL NAME": deal["UF_CRM_66879DD546E08"],
-      "Occupation 3": deal["UF_CRM_66879DD55649B"],
+      "Date 3": DATE, // Date
+      "FL NAME": FULL_NAME, // Full Name
+      "Occupation 3": OCCUPATION, // Occupation
     },
     APPLICATION: {
       "FUNDING 14": deal["UF_CRM_1721898817329"],
@@ -177,17 +187,17 @@ export async function getFields(deal, type) {
       "Legal Name 178": deal["UF_CRM_1721908583647"],
       "Legal Name 179": deal["UF_CRM_1721899514699"],
       "Legal Name 180": deal["UF_CRM_1721899530207"],
-      "FUNDING 16": phone,
-      "FUNDING 17": phone,
-      "FUNDING 18": city,
-      "FUNDING 23": city,
-      "FUNDING 28": city,
-      "FUNDING 20": name,
-      "FUNDING 19": email,
-      "FUNDING 21": postalCode,
-      "FUNDING 26": postalCode,
-      "FUNDING 29": postalCode,
-      "FUNDING 32": phone,
+      "FUNDING 16": PHONE,
+      "FUNDING 17": PHONE,
+      "FUNDING 18": CITY,
+      "FUNDING 23": CITY,
+      "FUNDING 28": CITY,
+      "FUNDING 20": LEGAL_NAME,
+      "FUNDING 19": EMAIL,
+      "FUNDING 21": POST_CODE,
+      "FUNDING 26": POST_CODE,
+      "FUNDING 29": POST_CODE,
+      "FUNDING 32": PHONE,
       "FUNDING 22": deal["UF_CRM_1721898872287"],
       "FUNDING 27": deal["UF_CRM_1721898909721"],
       "FUNDING 39": deal["UF_CRM_1721899557936"],
@@ -214,16 +224,16 @@ export async function getFields(deal, type) {
 
       "Legal Name 150": deal["UF_CRM_1721900328558"],
 
-      "Legal Name 173": deal["UF_CRM_1721911814507"],
-      "Legal Name 174": dob,
+      "Legal Name 173": LEGAL_NAME,
+      "Legal Name 174": DOB,
       "Legal Name 175": deal["UF_CRM_1721807702"],
 
-      "Legal Name 119": deal["UF_CRM_1721904277527"],
-      "Legal Name 120": deal["UF_CRM_1721904287264"],
-      "Legal Name 121": phone,
-      "Legal Name 151": city,
+      "Legal Name 119": STATE,
+      "Legal Name 120": COUNTRY,
+      "Legal Name 121": PHONE,
+      "Legal Name 151": CITY,
       "Legal Name 118": deal["UF_CRM_1721904246468"],
-      "Legal Name 152": postalCode,
+      "Legal Name 152": POST_CODE,
 
       "FUNDING 85": deal["UF_CRM_1721904312882"],
       "Legal Name 171": "",
@@ -274,10 +284,10 @@ export async function getFields(deal, type) {
       "Legal Name 1016": deal["UF_CRM_1721897971273"],
       "Legal Name 1017": deal["UF_CRM_1721897996676"],
 
-      "Legal Name 109": deal["UF_CRM_1721909629462"],
-      "Legal Name 1019": deal["UF_CRM_1721909629462"],
-      "Legal Name 1010": applicationDeclarationDate,
-      "Legal Name 1020": applicationDeclarationDate,
+      "Legal Name 109": FULL_NAME,
+      "Legal Name 1010": DATE,
+      // "Legal Name 1019": deal["UF_CRM_1721909629462"],
+      // "Legal Name 1020": applicationDeclarationDate,
 
       "FUNDING 79": deal["UF_CRM_1721899899716"],
 
@@ -285,19 +295,19 @@ export async function getFields(deal, type) {
       "FUNDING 83": deal["UF_CRM_1721899754502"],
       "FUNDING 80": deal["UF_CRM_1721805951"],
 
-      "FUNDING 11": name,
+      "FUNDING 11": LEGAL_NAME, // Name
 
-      "FUNDING 24": name,
+      "FUNDING 24": LEGAL_NAME,
       "Contact Name": deal["UF_CRM_1721899437643"],
-      "FUNDING 25": email,
-      "Email address": email,
-      "FUNDING 33": phone,
-      "Mobile No": phone,
-      "Phone No": phone,
+      "FUNDING 25": EMAIL,
+      "Email address": EMAIL,
+      "FUNDING 33": PHONE,
+      "Mobile No": PHONE,
+      "Phone No": PHONE,
 
       "FUNDING 84": deal["UF_CRM_1721899978480"],
-      "Legal Name 122": email,
-      "Legal Name 125": mobile,
+      "Legal Name 122": EMAIL,
+      "Legal Name 125": MOBILE,
       "Legal Name 123": deal["UF_CRM_1721807790"],
       "Legal Name 124": applicationIssueDate,
       "Legal Name 184": applicationExpiryDate,
@@ -313,12 +323,12 @@ export async function getFields(deal, type) {
     },
     HIRE: {
       // Hirer Information 1
-      "Legal Name 2": deal["UF_CRM_1721924693014"],
-      "Postal address 2": deal["UF_CRM_1721924722247"],
-      "Legal Name 83": deal["UF_CRM_1721924709010"],
-      "City 2": deal["UF_CRM_1721924730767"],
-      "Postcode 2": deal["UF_CRM_1721924739610"],
-      "Email 2": deal["UF_CRM_1721924748470"],
+      "Legal Name 2": LEGAL_NAME,
+      "Postal address 2": ADDRESS,
+      "Legal Name 83": MID_NUMBER,
+      "City 2": CITY,
+      "Postcode 2": POST_CODE,
+      "Email 2": EMAIL,
       // Key Financial Information
       "Legal Name 55": deal["UF_CRM_1721924870001"][0] || "",
       "Legal Name 59": deal["UF_CRM_1721924971996"][0] || "",
@@ -355,13 +365,13 @@ export async function getFields(deal, type) {
     },
     POYNT: {
       // Customer Information
-      "Text_13 ": deal["UF_CRM_1721926292991"],
-      "Text_14 ": deal["UF_CRM_1721926307981"],
-      "Text_15 ": deal["UF_CRM_1721926317409"],
+      "Text_13 ": LEGAL_NAME,
+      "Text_14 ": VAT_NUMBER,
+      "Text_15 ": DBA_NAME,
       "Text_16 ": deal["UF_CRM_1721926351184"],
       "Text_17 ": deal["UF_CRM_1721926372009"],
-      "Text_19 ": deal["UF_CRM_1721926405302"],
-      "Text_18 ": deal["UF_CRM_1721926418264"],
+      "Text_19 ": EMAIL,
+      "Text_18 ": PHONE,
       // Deatils
       "Text_20 ": deal["UF_CRM_1721926448436"],
       Text2: deal["UF_CRM_1721926468296"],
@@ -374,38 +384,24 @@ export async function getFields(deal, type) {
       "Text_24 ": deal["UF_CRM_1721926623333"],
       Text4: deal["UF_CRM_1721926636587"],
       // Customer declaration and signatures
-      "Text_26 ": deal["UF_CRM_1721926292991"],
-      "Text_27 ": poyntDate,
+      "Text_26 ": FULL_NAME,
+      "Text_27 ": DATE,
 
-      "Text_29 ": deal["UF_CRM_1721926292991"],
+      // Text_29: deal["UF_CRM_1721926292991"],
       // "Text_30": deal[""],
-      "Text_31 ": poyntDate,
+      // Text_31: poyntDate,
     },
   };
 
   return fields[type] || {};
 }
 
-/**
- * Checks if the provided data object represents a valid deal event.
- *
- * @param {Object} data - The data object to validate.
- * @return {boolean} True if the data represents a valid deal event, false otherwise.
- */
 export function isValidDealEvent(data) {
   return data.event && data.data.FIELDS.ID && data.event === "ONCRMDEALADD";
 }
 
-/**
- * Asynchronously fetches deal details based on the provided dealId.
- *
- * @param {number} dealId - The ID of the deal to fetch details for.
- * @return {Object | null} The deal details if found, or null if not found.
- */
 export async function fetchDealDetails(dealId) {
-  const response = await fetch(
-    `https://5tel.bitrix24.uk/rest/13/06ya9ccs2qvobl6t/crm.deal.get.json?ID=${dealId}`
-  );
+  const response = await fetch(`${WEBHOOK_URL}crm.deal.get.json?ID=${dealId}`);
 
   const result = await response.json();
   const deal = result?.result;
@@ -415,15 +411,9 @@ export async function fetchDealDetails(dealId) {
   return null;
 }
 
-/**
- * Asynchronously fetches contact details based on the provided contactId.
- *
- * @param {number} contactId - The ID of the contact to fetch details for.
- * @return {Promise<Object | null>} A promise that resolves to the contact details if found, or null if not found.
- */
 export async function fetchContactDetails(contactId) {
   const response = await fetch(
-    `https://5tel.bitrix24.uk/rest/13/06ya9ccs2qvobl6t/crm.contact.get.json?ID=${contactId}`
+    `${WEBHOOK_URL}crm.contact.get.json?ID=${contactId}`
   );
 
   const result = await response.json();
@@ -434,13 +424,6 @@ export async function fetchContactDetails(contactId) {
   return null;
 }
 
-/**
- * Processes a deal based on the provided deal object and deal ID.
- *
- * @param {Object} deal - The deal object containing the deal details.
- * @param {number} dealId - The ID of the deal.
- * @return {void}
- */
 export async function processDeal(deal, dealId) {
   const name = deal["UF_CRM_1721898555146"] || "";
   const phone = deal["UF_CRM_1721898775132"] || "";
@@ -473,15 +456,6 @@ export async function processDeal(deal, dealId) {
   modifyPdf(deal, dealId, TYPES.POYNT, contactId);
 }
 
-/**
- * Modifies a PDF template with deal details and saves it as a new PDF file.
- *
- * @param {Object} deal - The deal object containing details to be filled in the PDF.
- * @param {number} dealId - The ID of the deal.
- * @param {string} type - The type of the PDF template.
- * @param {number} contactId - The ID of the contact associated with the deal.
- * @return {Promise<void>} A promise that resolves when the PDF is saved and uploaded.
- */
 export async function modifyPdf(deal, dealId, type, contactId) {
   const templateFilePath = `./templates/${type}.pdf`;
   const outputFilePath = `./output/${type}_${dealId}.pdf`;
@@ -499,6 +473,7 @@ export async function modifyPdf(deal, dealId, type, contactId) {
 
     if (!field) return;
 
+    field.setFontSize(12);
     field.setText(value);
   });
 
@@ -706,15 +681,26 @@ export async function modifyPdf(deal, dealId, type, contactId) {
 
   await uploadPDFToBitrix(outputFilePath);
   await createNewESign(outputFilePath, contactId);
+  deleteFile(outputFilePath, (error) => {
+    if (error) {
+      console.error("Failed to delete file:", error.message);
+    } else {
+      console.log("File deletion was successful.");
+    }
+  });
 }
 
-/**
- * Asynchronously reads a file from the specified path and encodes it to base64.
- *
- * @param {string} filePath - The path to the file to be encoded.
- * @return {Promise<string>} A promise that resolves to the base64 encoded data of the file.
- *                           If an error occurs during the reading or encoding process, the promise is rejected with an error.
- */
+function deleteFile(filePath, callback) {
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error(`Error deleting file ${filePath}:`, err.message);
+      return callback(err); // Call the callback with the error
+    }
+    console.log(`File ${filePath} has been deleted successfully.`);
+    callback(); // Call the callback with no arguments to indicate success
+  });
+}
+
 function encodeFileToBase64(filePath) {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, { encoding: "base64" }, (err, data) => {
@@ -724,14 +710,6 @@ function encodeFileToBase64(filePath) {
   });
 }
 
-/**
- * Asynchronously uploads a PDF file to Bitrix24 CRM's Company Drive.
- *
- * @param {string} filePath - The path to the PDF file to be uploaded.
- * @return {Promise<Object>} A promise that resolves to an object indicating the success or failure of the operation.
- *   If successful, the object will have a `success` property set to `true`.
- *   If unsuccessful, the object will have a `success` property set to `false` and a `message` property containing the error message.
- */
 async function uploadPDFToBitrix(filePath) {
   try {
     const base64File = await encodeFileToBase64(filePath);
@@ -763,15 +741,6 @@ async function uploadPDFToBitrix(filePath) {
   }
 }
 
-/**
- * Asynchronously creates a new electronic signature (ESign) in Bitrix24 CRM.
- *
- * @param {string} filePath - The path to the file to be uploaded and used as the title of the ESign.
- * @param {number} contactId - The ID of the contact associated with the ESign.
- * @return {Promise<Object>} A promise that resolves to an object indicating the success or failure of the operation.
- *   If successful, the object will have a `success` property set to `true`.
- *   If unsuccessful, the object will have a `success` property set to `false` and a `message` property containing the error message.
- */
 async function createNewESign(filePath, contactId) {
   const fileName = filePath.split("/").pop();
 
