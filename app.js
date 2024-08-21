@@ -16,18 +16,32 @@ app.get("/", (req, res) => {
 });
 
 app.post("/webhook", async (req, res) => {
-  const data = req.body;
-  const dealId = Number(data?.data?.FIELDS?.ID);
+  const { data } = req.body;
+  const dealId = Number(data?.FIELDS?.ID);
+  console.log(dealId);
+
+  if (!dealId) {
+    console.error("Invalid data received: Missing deal ID.");
+    return res
+      .status(400)
+      .json({ error: "Invalid data received: Missing deal ID." });
+  }
 
   try {
-    if (isValidDealEvent(data)) {
-      const deal = await fetchDealDetails(dealId);
-      if (deal) processDeal(deal, dealId);
+    const deal = await fetchDealDetails(dealId);
+
+    if (!deal) {
+      console.warn(`Deal not found: ID ${dealId}`);
+      return res.status(404).json({ error: "Deal not found." });
     }
+
+    processDeal(deal, dealId);
+    console.log("Deal processed: ", deal);
 
     res.sendStatus(200);
   } catch (error) {
-    res.sendStatus(500);
+    console.error("Error processing webhook:", error);
+    res.status(500).json({ error: "Internal server error." });
   }
 });
 
