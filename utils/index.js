@@ -22,7 +22,7 @@ export async function getFields(deal, type) {
   const EMAIL = deal["UF_CRM_1721898763992"];
   const PHONE = deal["UF_CRM_1721898775132"];
   const MOBILE = deal["UF_CRM_1721898789505"];
-  const POST_CODE = deal["UF_CRM_6687D4F10F1F1"];
+  const POST_CODE = deal["UF_CRM_1724420183"];
   const STATE = deal["UF_CRM_1721904277527"];
   const COUNTRY = deal["UF_CRM_1721904287264"];
   const CITY = deal["UF_CRM_1721898705193"];
